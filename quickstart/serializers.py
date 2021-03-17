@@ -31,10 +31,11 @@ class Article_TagsSerializer(serializers.HyperlinkedModelSerializer):
         model = Article_Tags
         fields = ['articleID','tagID']
 
-class User_CommentSerializer(serializers.HyperlinkedModelSerializer):
+class User_CommentSerializer(serializers.ModelSerializer):
+    articleID_name = serializers.RelatedField(source='articleID', read_only=True)
     class Meta:
         model = User_Comments
-        fields=['commentID', 'userID', 'articleID', 'content', 'time']
+        fields=['commentID','articleID_name', 'content', 'time']
 
 class User_ViewSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

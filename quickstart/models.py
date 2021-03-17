@@ -55,7 +55,7 @@ class Article_Category(models.Model):
 
 class User_Comments(models.Model):   
     commentID = models.IntegerField(primary_key=True)
-    userID = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # userID = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     articleID = models.ForeignKey(Articles, on_delete=models.CASCADE)
     content = models.TextField()
     time = models.IntegerField()
@@ -63,7 +63,7 @@ class User_Comments(models.Model):
         db_table = "user_comments"
 
 
-class Users(models.Model):   # this model is crawled user from vnexpress
+class Users(models.Model):   # this model is crawled users from vnexpress
     userId = models.IntegerField(primary_key=True)
     user_name = models.TextField()
     password = models.TextField()

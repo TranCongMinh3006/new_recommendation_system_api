@@ -7,7 +7,7 @@ from rest_framework import serializers
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ['url', 'username', 'email', 'groups']
+        fields = ['id','url', 'username', 'email', 'groups']
 
 class UsersSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -29,13 +29,12 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
 class Article_TagsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Article_Tags
-        fields = ['articleID','tagID']
+        fields = ['id','articleID','tagID']
 
 class User_CommentSerializer(serializers.ModelSerializer):
-    articleID_name = serializers.RelatedField(source='articleID', read_only=True)
     class Meta:
         model = User_Comments
-        fields=['commentID','articleID_name', 'content', 'time']
+        fields=['commentID','userID','articleID', 'content', 'time']
 
 class User_ViewSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -50,9 +49,9 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
 class Article_CategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Article_Category
-        fields = ['articleID','categoryID']
+        fields = ['id','articleID','categoryID']
 
 class ArticlesSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Articles
-        fields = ['articleID', 'representation', 'link', 'category', 'displayContent', 'content', 'title', 'tags', 'sapo']
+        fields = ['articleID', 'representation', 'link', 'category', 'displayContent', 'content','time', 'title', 'tags', 'sapo', 'thumbnail', 'click_counter','hot_score']

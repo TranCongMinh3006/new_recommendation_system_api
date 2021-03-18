@@ -2,6 +2,7 @@ from django.db import connections
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.db.models.fields import IntegerField
 
 # Create your models here.
 class Articles(models.Model):
@@ -11,9 +12,13 @@ class Articles(models.Model):
     category = models.TextField()
     displayContent = models.TextField()
     content = models.TextField()
+    time = models.IntegerField()
     title = models.CharField(max_length=255)
     tags = models.TextField()
     sapo = models.TextField()
+    thumbnail = models.TextField()
+    click_counter = models.IntegerField()
+    hot_score = models.IntegerField()
     class Meta:
         db_table = "articles"
 
@@ -24,19 +29,13 @@ class Tags(models.Model):
     class Meta:
         db_table = "tags"
 
-# class Article_Tags(models.Model):   
-#     articleID = models.IntegerField()
-#     tagID = models.IntegerField()
-#     class Meta:
-#         db_table = "article_tags"
 
 class Article_Tags(models.Model):
     id = models.IntegerField(primary_key=True)
-    articleID = models.ForeignKey(Articles, on_delete=models.CASCADE)
-    tagID = models.ForeignKey(Tags, on_delete=models.CASCADE)
+    articleID = models.IntegerField()
+    tagID = models.IntegerField()
 
     class Meta:
-        unique_together = (("articleID", "tagID"),)
         db_table = "article_tags"
 
 
@@ -47,7 +46,8 @@ class Category(models.Model):
     class Meta:
         db_table = "category"
 
-class Article_Category(models.Model):   
+class Article_Category(models.Model):
+    id = models.IntegerField(primary_key=True)
     articleID = models.IntegerField()
     categoryID = models.IntegerField()
     class Meta:
@@ -56,7 +56,8 @@ class Article_Category(models.Model):
 class User_Comments(models.Model):   
     commentID = models.IntegerField(primary_key=True)
     # userID = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    articleID = models.ForeignKey(Articles, on_delete=models.CASCADE)
+    userID = models.IntegerField()
+    articleID = models.IntegerField()
     content = models.TextField()
     time = models.IntegerField()
     class Meta:

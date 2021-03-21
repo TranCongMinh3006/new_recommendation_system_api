@@ -13,16 +13,17 @@ import datetime
 
 time_now = int(datetime.datetime.now().timestamp())
 
-time_72h_before = time_now - 1000 * 60 * 60 * 24 * 3
+time_72h_before = time_now - 60 * 60 * 24 * 3
 
-#-----------------------------------------------------------------
+# -----------------------------------------------------------------
 new_articles = Articles.objects.filter(time__gt=time_72h_before)[:200]
 
 
-#-----------------------------------------------
-number_of_articles = 20
-hot_article_in72h = Articles.objects.filter(time__gt=time_72h_before)[:number_of_articles]
-hot_article_in72h_id =  hot_article_in72h.values_list('articleID', flat=True)
+# -----------------------------------------------
+number_of_articles = 200
+hot_article_in72h = Articles.objects.filter(
+    time__gt=time_72h_before)[:number_of_articles]
+hot_article_in72h_id = hot_article_in72h.values_list('articleID', flat=True)
 for i in list(hot_article_in72h_id):
     tmp = Articles.objects.get(pk=i)
     click_score = tmp.click_counter
@@ -30,13 +31,12 @@ for i in list(hot_article_in72h_id):
     number_of_comments = User_Comments.objects.filter(
         articleID=ID).count()
 
-    hot_score = number_of_comments*80 + click_score*20
-
+    hot_score = number_of_comments*9 + click_score
     tmp.hot_score = hot_score
 
 hot_articles = Articles.objects.all().order_by('-hot_score',)[:20]
 
-#------------------------------------------------
+# ------------------------------------------------
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -99,7 +99,29 @@ class User_Comment_ViewSet(viewsets.ModelViewSet):
     """
     queryset = User_Comments.objects.all()
     serializer_class = User_CommentSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
+
+    # @action(detail=False)
+    # def get_all_comment_by_id(self, request):
+    #     comment_by_id = User_Comments.objects.filter(articleID = request.data.articleID)
+    #     page = self.paginate_queryset(comment_by_id)
+    #     if page is not None:
+    #         serializer = self.get_serializer(page, many=True)
+    #         return self.get_paginated_response(serializer.data)
+
+    #     serializer = self.get_serializer(comment_by_id, many=True)
+    #     return Response(serializer.data)
+
+    # def create(self, request):
+    #     print("hello")
+    #     # Now you have a clean valid email string 
+    #     # You might want to call an external API or modify another table
+    #     # (eg. keep track of number of accounts registered.) or even
+    #     # make changes to the email format.
+
+    #     # Once you are done, create the instance with the validated data
+    #     # return models.YourModel.objects.create(email=email, **validated_data)
+        # return Response("hello")
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -160,6 +182,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
 # phần này đã ok , trả về artical detail  và tagid, commentid
 
+
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
 
@@ -201,6 +224,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
 
 # đã làm được nhưng thời gian quá lâu , cần cải thiện sau
+
     @action(detail=False)
     def hot_article(self, request):
         hot_article = hot_articles

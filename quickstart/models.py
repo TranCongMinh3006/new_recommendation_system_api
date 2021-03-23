@@ -79,3 +79,13 @@ class User_View(models.Model):
     time = models.IntegerField()
     class Meta:
         db_table = "user_view"
+
+
+class User_Category(models.Model):
+    id = models.IntegerField(primary_key=True)
+    userID = models.IntegerField()
+    categoryID = models.IntegerField()
+    count = models.IntegerField()
+
+    class Meta:
+        db_table = "user_category"

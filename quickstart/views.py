@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, Group
-from . models import Article_Category, Article_Tags, Articles, Category, Tags, User_Comments, User_View, Users
+from . models import Article_Category, Article_Tags, Articles, Category, Tags, User_Comments, User_View, Users, User_Category
 from rest_framework import viewsets
 from rest_framework import permissions
 from quickstart.serializers import Article_CategorySerializer, Article_TagsSerializer, ArticlesSerializer, CategorySerializer, UserSerializer, GroupSerializer, TagSerializer, User_CommentSerializer, User_ViewSerializer, UsersSerializer
@@ -178,6 +178,14 @@ class ArticleViewSet(viewsets.ModelViewSet):
         dic = {}
         dic['articleID'] = list(article_id)
         return JsonResponse(dic)
+#  đã ok , tim theo str trong form data
+    @action(detail=False)
+    def search(self, request):
+        article_id = Articles.objects.filter(title__contains = request.GET['str']).order_by(
+            '-time',)[:100].values_list('articleID', flat=True)
+        dic = {}
+        dic['articleID'] = list(article_id)
+        return JsonResponse(dic)
 
 
 # phần này đã ok , trả về artical detail  và tagid, commentid
@@ -185,6 +193,9 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
+        obj = User_Category.objects.get(userID=1002722676)
+        obj.count +=1
+        obj.save()
 
         comment = User_Comments.objects.filter(
             articleID=instance.articleID).values_list('commentID', flat=True)

@@ -5,7 +5,7 @@ mydb = mysql.connector.connect(
   host="127.0.0.1",
   user="root",
   password="123456",
-  database="vnexpress",
+  database="vnexpressdemo",
   auth_plugin='mysql_native_password'
 )
 
